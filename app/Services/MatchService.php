@@ -25,7 +25,7 @@ final class MatchService
 
    public function rankJobsForStudent(Student $student) : Collection
    {
-       return JobPosting::where('is_active', true)
+       return JobPosting::openForDirectory()
            ->get()
            ->map(fn (JobPosting $job) => [
                'job' => $job,

@@ -1,58 +1,80 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# WCC JobMatch — Laravel portal
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel 12 application for World Citi College career records and employer opportunities. The frontend uses Blade, Livewire, Tailwind and the existing WCC branding. This repository runs independently of the C# / Blazor Solo application.
 
-## About Laravel
+## Requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.5 with the extensions required by `composer.lock`; SQLite/PDO SQLite for automated tests.
+- Composer 2 and Node.js 24 LTS with npm.
+- SQLite for a new local review database, or the team's configured database connection.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Use the PHP version selected in Laragon for both the terminal and web server. PHP 8.3/8.4 cannot satisfy this project's PHP requirement. Install dependencies from the committed lock files.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Fresh local checkout
 
-## Learning Laravel
+Work in a new folder. Keep an existing `.env`, application key, database and uploaded resumes intact.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```sh
+composer install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Copy `.env.example` to `.env` only if `.env` does not already exist. Set `APP_NAME="WCC JobMatch"` and `APP_URL=http://127.0.0.1:8000`. For a fresh SQLite database, retain `DB_CONNECTION=sqlite` and create the empty file `database/database.sqlite`. For another database, configure the connection using your own local credentials.
 
-## Contributing
+```sh
+php artisan key:generate
+php artisan migrate
+npm ci --ignore-scripts
+npm run build
+php artisan serve --host=127.0.0.1 --port=8000
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Generate the application key only for a fresh installation. Open the address printed by Artisan. Development assets can instead use `npm run dev` in a separate terminal. `migrate:fresh` deletes existing data; do not use it on a shared database.
 
-## Code of Conduct
+The default seeder creates no login accounts or sample data. Register student, alumni and employer accounts through the application. Staff accounts must be provisioned by an authorized maintainer; public signup cannot grant admin or placement officer roles.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Optional local design samples
 
-## Security Vulnerabilities
+```sh
+php artisan db:seed --class=JobMatchDesignSampleSeeder
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+This existing seeder is restricted to `APP_ENV=local`. It inserts sample companies, jobs and skills for design review, with random employer passwords. These are not real vacancies or AI training/evaluation data. Do not seed samples into a live database.
 
-## License
+## Features and access
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Role | Available portal areas |
+| --- | --- |
+| Guest | Public jobs, skills, employers, about, registration and login |
+| Student | Profile, own PDF resume (up to 5 MB), skills, certifications, own placements |
+| Alumni | Dashboard and profile |
+| Employer | Company, owned job postings, scoped placements |
+| Admin / placement officer | Dashboard, profile, placement visibility and CSV report |
+| Admin | Admin alumni area |
+
+Record ownership and active-account checks apply beyond navigation visibility. Resume files use private local storage and an authenticated download route; do not expose their folder publicly.
+
+## Job visibility and matching boundary
+
+`JobPosting::openForDirectory()` admits active postings from active employer accounts with no deadline or a deadline on/after the start of the current application day. A date-only deadline remains open for that day. Public job detail pages and recommendation candidates share this rule.
+
+`MatchService::score()` remains the existing required-skill overlap percentage. This is a baseline score, not a probability of employment or a validated AI model. AI/provider integration and the final recommendation interface remain separate work with Cole. No new AI provider, credentials, matching page or C# connection is configured by this change.
+
+## Validation
+
+```sh
+php artisan test
+npm run test:ui
+npm run build
+```
+
+The GitHub Actions workflow runs these checks on PHP 8.5 and Node 24 without live credentials. See [validation and handoff](documentation/VALIDATION_AND_HANDOFF.md) for manual checks and remaining integration work, and [AI options](documentation/AI_OPTIONS.md) for an optional research proposal.
+
+## Offline behavior and deployment
+
+The service worker provides the generic offline fallback. It does not make authenticated workflows, database edits or resume access work offline. Test service workers on localhost or HTTPS.
+
+Before deployment, configure the real database, HTTPS, mail delivery for password resets, `APP_DEBUG=false`, writable Laravel storage and a web root pointing to `public/`. Keep `.env`, application keys and private uploads out of Git. A successful PR merge alone does not deploy the application.
+
+## Framework attribution
+
+Built with [Laravel](https://laravel.com), an open-source framework licensed under the [MIT license](https://opensource.org/licenses/MIT). Existing framework and asset notices remain applicable.
