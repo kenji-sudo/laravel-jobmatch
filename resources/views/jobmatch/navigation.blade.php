@@ -3,6 +3,7 @@
     <a @class(['active'=>request()->routeIs('jobs.*')]) @if(request()->routeIs('jobs.*')) aria-current="page" @endif href="{{ route('jobs.index') }}">Jobs</a>
     <a @class(['active'=>request()->routeIs('portal.profile')]) @if(request()->routeIs('portal.profile')) aria-current="page" @endif href="{{ route('portal.profile') }}">My Profile</a>
     @if(auth()->user()->role === App\Enum\UserRole::STUDENT)
+        <a @class(['active'=>request()->routeIs('portal.recommendations*')]) @if(request()->routeIs('portal.recommendations*')) aria-current="page" @endif href="{{ route('portal.recommendations') }}">Job Recommendations</a>
         <a @class(['active'=>request()->routeIs('portal.resume')]) @if(request()->routeIs('portal.resume')) aria-current="page" @endif href="{{ route('portal.resume') }}">My Resume</a>
         <a @class(['active'=>request()->routeIs('portal.skills','portal.certifications')]) @if(request()->routeIs('portal.skills','portal.certifications')) aria-current="page" @endif href="{{ route('portal.skills') }}">Skills &amp; Certifications</a>
         <a @class(['active'=>request()->routeIs('portal.placements')]) @if(request()->routeIs('portal.placements')) aria-current="page" @endif href="{{ route('portal.placements') }}">My Placements</a>

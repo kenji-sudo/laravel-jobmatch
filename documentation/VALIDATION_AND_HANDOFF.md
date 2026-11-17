@@ -35,7 +35,7 @@ These checks require the running application, actual browsers and the chosen dat
 
 ## Remaining decisions
 
-1. Cole owns the AI/provider contract and final recommendation interface. Agree inputs, result format, failure behavior and evaluation before integration.
+1. The follow-up `feature/local-semantic-matching` branch implements an optional student recommendation page and a local Ollama provider for Cole to review. Its scope and remaining evaluation are in `LOCAL_AI_MATCHING.md`; the original scoring baseline remains intact.
 2. Review and merge this follow-up into `feature/frontend`. That is separate from a release merge to `main` and deployment.
 3. Complete the manual checks above with named testers. Record date, browser, database and observed failures; do not label them complete without execution.
 
