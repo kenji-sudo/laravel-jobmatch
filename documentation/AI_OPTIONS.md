@@ -1,6 +1,6 @@
 # Optional AI matching proposal for Cole
 
-Research only, checked 17 November 2026. No model, new runtime dependency, provider account or API key is installed/configured by this patch.
+Research checked 17 November 2026. The subsequent `feature/local-semantic-matching` implementation selects local Ollama with MiniLM; see [implementation and setup](LOCAL_AI_MATCHING.md). The alternatives and evaluation proposal below remain research notes. No hosted provider account or API key is required.
 
 ## Options to evaluate
 

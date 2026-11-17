@@ -2,7 +2,7 @@ name: Laravel checks
 
 on:
   push:
-    branches: [feature/frontend, fix/laravel-readiness]
+    branches: [feature/frontend, fix/laravel-readiness, feature/local-semantic-matching]
   pull_request:
     branches: [feature/frontend, main]
   workflow_dispatch:
@@ -42,3 +42,37 @@ jobs:
           npm run build
       - name: PHP test suite
         run: php artisan test
+
+  local-model-smoke:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/feature/local-semantic-matching'
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, pdo_sqlite, sqlite3, dom, xml, curl, fileinfo
+          tools: composer:v2
+          coverage: none
+      - name: Prepare application
+        run: |
+          composer install --prefer-dist --no-interaction --no-progress
+          cp .env.example .env
+          php artisan key:generate
+      - name: Install official local model server
+        run: curl -fsSL https://ollama.com/install.sh | sh
+      - name: Download model and check actual application transport
+        env:
+          OLLAMA_HOST: 127.0.0.1:11434
+        run: |
+          ollama serve > "$RUNNER_TEMP/ollama-smoke.log" 2>&1 &
+          for attempt in $(seq 1 15); do
+            if curl --fail --silent http://127.0.0.1:11434/api/tags > /dev/null; then break; fi
+            sleep 2
+          done
+          ollama pull all-minilm:22m-l6-v2-fp16
+          php artisan matching:check

@@ -45,7 +45,7 @@ This existing seeder is restricted to `APP_ENV=local`. It inserts sample compani
 | Role | Available portal areas |
 | --- | --- |
 | Guest | Public jobs, skills, employers, about, registration and login |
-| Student | Profile, own PDF resume (up to 5 MB), skills, certifications, own placements |
+| Student | Profile, own PDF resume (up to 5 MB), skills, certifications, own placements, job recommendations |
 | Alumni | Dashboard and profile |
 | Employer | Company, owned job postings, scoped placements |
 | Admin / placement officer | Dashboard, profile, placement visibility and CSV report |
@@ -57,7 +57,15 @@ Record ownership and active-account checks apply beyond navigation visibility. R
 
 `JobPosting::openForDirectory()` admits active postings from active employer accounts with no deadline or a deadline on/after the start of the current application day. A date-only deadline remains open for that day. Public job detail pages and recommendation candidates share this rule.
 
-`MatchService::score()` remains the existing required-skill overlap percentage. This is a baseline score, not a probability of employment or a validated AI model. AI/provider integration and the final recommendation interface remain separate work with Cole. No new AI provider, credentials, matching page or C# connection is configured by this change.
+`MatchService::score()` remains the existing required-skill overlap percentage. This is a baseline score, not a probability of employment or a validated AI model.
+
+## Optional local semantic matching
+
+Students can open **Job Recommendations** for baseline skill coverage. An explicit form submission can rerank up to 50 baseline candidates using MiniLM embeddings on a loopback-only Ollama server. Semantic similarity is displayed separately from skill coverage. Failures return an explicitly labelled baseline.
+
+On a configured Windows checkout of this branch, double-click `ENABLE-LOCAL-AI.cmd`. It detects PHP 8.5, opens the official Ollama download page if needed, downloads the configured MiniLM model, backs up `.env` in the ignored local backup folder, updates only the three matching settings and runs a health check. It does not install Laravel dependencies, copy project source or migrate your database. Restart an already running Laravel server after enabling.
+
+PDF uploads remain private documents; this version does not extract their text automatically. Matching uses saved skill names, program and an optional short career summary. See [local AI integration](documentation/LOCAL_AI_MATCHING.md) for setup, boundaries and evaluation. Cole can review or replace the provider independently of the original baseline. No C# integration is introduced.
 
 ## Validation
 
