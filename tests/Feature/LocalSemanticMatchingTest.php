@@ -25,7 +25,8 @@ function semanticTestJob(array $attributes = []): JobPosting
 test('opening recommendations never invokes the model', function () {
     $user = User::factory()->student()->create(['is_active' => true]);
     semanticTestJob();
-    $this->actingAs($user)->get('/portal/recommendations')->assertOk()->assertSee('Skill coverage results');
+    $this->actingAs($user)->get('/portal/recommendations')->assertOk()->assertSee('Skill coverage results')
+        ->assertHeader('Cache-Control', 'no-store, private');
     Http::assertNothingSent();
 });
 

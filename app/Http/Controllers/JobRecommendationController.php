@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Services\Matching\SemanticJobMatcher;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\View\View;
 
 final class JobRecommendationController extends Controller
 {
-    public function __invoke(Request $request, SemanticJobMatcher $matcher): View
+    public function __invoke(Request $request, SemanticJobMatcher $matcher): Response
     {
         $student = Student::where('user_id', $request->user()->id)->firstOrFail();
         $data = [];
@@ -25,9 +25,9 @@ final class JobRecommendationController extends Controller
         }
         $summary = $data['summary'] ?? '';
 
-        return view('jobmatch.recommendations', [
+        return response()->view('jobmatch.recommendations', [
             'result' => $matcher->recommend($student, $summary, $request->isMethod('post')),
             'summary' => $summary,
-        ]);
+        ])->header('Cache-Control', 'no-store, private');
     }
 }

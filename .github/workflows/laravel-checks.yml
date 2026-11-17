@@ -42,6 +42,14 @@ jobs:
           npm run build
       - name: PHP test suite
         run: php artisan test
+      - name: Validate Windows launcher syntax
+        shell: pwsh
+        run: |
+          Get-ChildItem "$env:GITHUB_WORKSPACE/tools/*.ps1" | ForEach-Object {
+            $parseErrors = $null
+            $null = [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$parseErrors)
+            if ($parseErrors.Count -gt 0) { throw ($parseErrors | Out-String) }
+          }
 
   local-model-smoke:
     if: github.event_name == 'push' && github.ref == 'refs/heads/feature/local-semantic-matching'
