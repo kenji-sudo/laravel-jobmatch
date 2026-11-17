@@ -1,4 +1,4 @@
-param([string]$Target = 'C:\laragon\www\jobmatch-cole')
+param([string]$Target = 'C:\laragon\www\jobmatch-cole', [switch]$CheckOnly)
 $ErrorActionPreference = 'Stop'
 $payload = Split-Path -Parent $PSScriptRoot
 function Get-TextHash([string]$Path) {
@@ -48,10 +48,14 @@ try {
             $hash = Get-TextHash $destination
             if ($hash -eq $file.updated_hash) { continue }
             if ($file.base_hashes -notcontains $hash) { $conflicts += $file.path; continue }
-        } elseif ($file.base_hashes.Count -gt 0) { $conflicts += $file.path; continue }
+        } elseif ($file.allow_missing -ne $true) { $conflicts += $file.path; continue }
         $changes += $file
     }
     if ($conflicts.Count -gt 0) { throw ("Existing files differ from the expected PR #6/readiness version. Nothing was changed:`n" + ($conflicts -join "`n")) }
+    if ($CheckOnly) {
+        Write-Host 'Compatibility check passed. No files were changed.'
+        exit 0
+    }
     $backup = Join-Path $Target ('.jobmatch-fix-backups\ai-update\' + [guid]::NewGuid().ToString())
     New-Item -ItemType Directory -Path $backup -Force | Out-Null
     $applied = @()
