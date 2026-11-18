@@ -2,6 +2,7 @@
     <a @class(['active'=>request()->routeIs('dashboard')]) @if(request()->routeIs('dashboard')) aria-current="page" @endif href="{{ route('dashboard') }}">Home</a>
     <a @class(['active'=>request()->routeIs('jobs.*')]) @if(request()->routeIs('jobs.*')) aria-current="page" @endif href="{{ route('jobs.index') }}">Jobs</a>
     <a @class(['active'=>request()->routeIs('portal.profile')]) @if(request()->routeIs('portal.profile')) aria-current="page" @endif href="{{ route('portal.profile') }}">My Profile</a>
+    <a @class(['active'=>request()->routeIs('portal.assistant*')]) @if(request()->routeIs('portal.assistant*')) aria-current="page" @endif href="{{ route('portal.assistant') }}">AI Assistant</a>
     @if(auth()->user()->role === App\Enum\UserRole::STUDENT)
         <a @class(['active'=>request()->routeIs('portal.recommendations*')]) @if(request()->routeIs('portal.recommendations*')) aria-current="page" @endif href="{{ route('portal.recommendations') }}">Job Recommendations</a>
         <a @class(['active'=>request()->routeIs('portal.resume')]) @if(request()->routeIs('portal.resume')) aria-current="page" @endif href="{{ route('portal.resume') }}">My Resume</a>
