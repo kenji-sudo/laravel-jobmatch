@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
-use App\Services\Matching\SemanticJobMatcher;
+use App\Services\Matching\RecommendationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 final class JobRecommendationController extends Controller
 {
-    public function __invoke(Request $request, SemanticJobMatcher $matcher): Response
+    public function __invoke(Request $request, RecommendationService $matcher): Response
     {
         $student = Student::where('user_id', $request->user()->id)->firstOrFail();
         $data = [];

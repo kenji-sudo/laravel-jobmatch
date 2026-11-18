@@ -3,6 +3,7 @@
         <span class="overline">YOUR CAREER PROFILE</span>
         <h1>My Resume</h1>
         <p class="muted">Keep a current PDF resume available in your account.</p>
+        <a class="button outline" href="{{ route('portal.resume.extract') }}">Extract and Review Resume Skills</a>
     </div>
     <div class="resume-grid">
         <section class="card form-card">

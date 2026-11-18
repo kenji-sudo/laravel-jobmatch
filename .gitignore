@@ -29,3 +29,9 @@ Thumbs.db
 
 # Local patch backups
 .jobmatch-fix-backups/
+
+# .NET inference build output and locally trained models
+**/bin/
+**/obj/
+/services/**/artifacts/
+/local-ai/

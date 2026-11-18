@@ -3,6 +3,7 @@
 use App\Http\Controllers\JobMatchPortalController as Portal;
 use App\Http\Controllers\JobMatchPublicController as PublicPages;
 use App\Http\Controllers\JobRecommendationController;
+use App\Http\Controllers\ResumeExtractionController;
 use Illuminate\Support\Facades\Route;
 
 // Public directories can be browsed without an account.
@@ -27,6 +28,9 @@ Route::middleware([
 
     // Student career records.
     Route::middleware('role:student')->group(function () {
+        Route::get('/portal/resume/extract', ResumeExtractionController::class)->name('portal.resume.extract');
+        Route::post('/portal/resume/extract', ResumeExtractionController::class)->middleware('throttle:3,1')->name('portal.resume.extract.run');
+        Route::post('/portal/resume/confirm', [ResumeExtractionController::class, 'confirm'])->middleware('throttle:6,1')->name('portal.resume.confirm');
         Route::get('/portal/recommendations', JobRecommendationController::class)->name('portal.recommendations');
         Route::post('/portal/recommendations', JobRecommendationController::class)->middleware('throttle:6,1')->name('portal.recommendations.run');
         Route::get('/portal/resume', [Portal::class, 'resume'])->name('portal.resume');

@@ -59,13 +59,15 @@ Record ownership and active-account checks apply beyond navigation visibility. R
 
 `MatchService::score()` remains the existing required-skill overlap percentage. This is a baseline score, not a probability of employment or a validated AI model.
 
-## Optional local semantic matching
+## Gemini extraction and ML.NET matching
 
-Students can open **Job Recommendations** for baseline skill coverage. An explicit form submission can rerank up to 50 baseline candidates using MiniLM embeddings on a loopback-only Ollama server. Semantic similarity is displayed separately from skill coverage. Failures return an explicitly labelled baseline.
+The default driver is now `gemini_mlnet`, aligned with Cole's Gemini extraction / ML.NET feature-based approach. Students can optionally upload a PDF or DOCX to Gemini after explicit consent, review a draft and confirm selected approved skills. Predictions use confirmed database records, not unverified AI metadata.
 
-On a configured Windows checkout of this branch, double-click `ENABLE-LOCAL-AI.cmd`. It detects PHP 8.5, opens the official Ollama download page if needed, downloads the configured MiniLM model, backs up `.env` in the ignored local backup folder, updates only the three matching settings and runs a health check. It does not install Laravel dependencies, copy project source or migrate your database. Restart an already running Laravel server after enabling.
+The .NET 10 inference service in `services/JobMatch.Inference` uses actual certification and completed internship counts, requires a trained artifact, and returns a score plus exact five-feature Shapley contributions using a zero reference. It never auto-trains the three dummy examples in Cole's WIP branch. Scores are not calibrated hiring probabilities.
 
-PDF uploads remain private documents; this version does not extract their text automatically. Matching uses saved skill names, program and an optional short career summary. See [local AI integration](documentation/LOCAL_AI_MATCHING.md) for setup, boundaries and evaluation. Cole can review or replace the provider independently of the original baseline. No C# integration is introduced.
+On a configured Windows checkout, double-click `START-COLE-AI.cmd`. It checks PHP 8.5 / .NET 10 SDK, prompts privately for a Gemini key and enabled model ID if missing, generates a local integration secret, and can train a supplied labelled CSV. No API key, real dataset or trained production artifact is shipped. Without them, the corresponding feature remains visibly unavailable and skill coverage still works.
+
+See [Cole-aligned architecture and setup](documentation/COLE_ALIGNED_AI.md). The earlier Ollama code remains an explicitly selectable legacy prototype (`MATCHING_DRIVER=ollama`), not the default. Cole's original repository is not modified by this branch.
 
 ## Validation
 

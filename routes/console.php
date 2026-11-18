@@ -10,6 +10,14 @@ Artisan::command('inspire', function () {
 
 Artisan::command('matching:check', function (OllamaEmbeddingClient $client) {
     try {
+        if (config('matching.driver') !== 'ollama') {
+            if (! app(\App\Services\Matching\MlNetClient::class)->health()) {
+                $this->error('ML.NET is unavailable or a trained model has not been loaded.');
+                return 1;
+            }
+            $this->info('ML.NET is ready with a trained model. This does not measure relevance accuracy.');
+            return 0;
+        }
         $vectors = $client->embed(['PHP software development', 'Build PHP applications']);
         $this->info('Local embedding service responded with valid vectors.');
         $this->line('Model: '.config('matching.model'));

@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'driver' => env('MATCHING_DRIVER', 'gemini_mlnet'),
+    'mlnet_url' => env('MATCHING_MLNET_URL', 'http://127.0.0.1:5291'),
+    'integration_key' => env('MATCHING_INTEGRATION_KEY', ''),
+    'gemini_key' => env('GEMINI_API_KEY', ''),
+    'gemini_model' => env('GEMINI_MODEL', ''),
     'enabled' => env('MATCHING_AI_ENABLED', false),
     'ollama_url' => env('MATCHING_OLLAMA_URL', 'http://127.0.0.1:11434'),
     'model' => env('MATCHING_EMBEDDING_MODEL', 'all-minilm:22m-l6-v2-fp16'),
