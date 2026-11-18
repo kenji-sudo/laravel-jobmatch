@@ -9,7 +9,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 beforeEach(function () {
-    config(['matching.enabled' => true, 'matching.ollama_url' => 'http://127.0.0.1:11434']);
+    config(['matching.driver' => 'ollama', 'matching.enabled' => true, 'matching.ollama_url' => 'http://127.0.0.1:11434']);
     Http::preventStrayRequests();
 });
 

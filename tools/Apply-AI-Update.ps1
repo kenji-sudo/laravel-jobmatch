@@ -92,8 +92,8 @@ try {
         throw 'Update checks failed. Changed source files were restored from the local backup.'
     }
     Write-Host 'AI source update applied. Your .env, database and uploaded files were preserved.' -ForegroundColor Green
-    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $Target 'tools/Enable-LocalAI.ps1')
-    if ($LASTEXITCODE -ne 0) { Write-Host 'Source is updated; local model setup is pending. After installing Ollama, double-click ENABLE-LOCAL-AI.cmd inside your project.' -ForegroundColor Yellow }
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $Target 'tools/Configure-ColeAI.ps1')
+    if ($LASTEXITCODE -ne 0) { Write-Host 'Source is updated; Gemini/ML.NET setup is pending. Run START-COLE-AI.cmd inside your project after resolving the message above.' -ForegroundColor Yellow }
 } catch {
     Write-Host $_.Exception.Message -ForegroundColor Red
     exit 1

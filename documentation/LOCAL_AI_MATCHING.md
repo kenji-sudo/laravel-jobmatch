@@ -1,5 +1,7 @@
 # Local semantic job matching
 
+Legacy prototype: the default is now Gemini + ML.NET. See `COLE_ALIGNED_AI.md`. This older provider is used only when `MATCHING_DRIVER=ollama` is explicitly selected.
+
 ## Implemented behavior
 
 - `/portal/recommendations`: authenticated active students only, selected from the signed-in user's own profile. GET shows baseline skill coverage and never contacts the model.
