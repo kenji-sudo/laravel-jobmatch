@@ -4,6 +4,7 @@ use App\Http\Controllers\JobMatchPortalController as Portal;
 use App\Http\Controllers\JobMatchPublicController as PublicPages;
 use App\Http\Controllers\JobRecommendationController;
 use App\Http\Controllers\ResumeExtractionController;
+use App\Http\Controllers\AssistantController;
 use Illuminate\Support\Facades\Route;
 
 // Public directories can be browsed without an account.
@@ -22,6 +23,9 @@ Route::middleware([
     'role:student,alumni,employer,admin,placement_officer',
 ])->group(function () {
     // Shared account pages.
+    Route::get('/portal/assistant', [AssistantController::class, 'index'])->name('portal.assistant');
+    Route::post('/portal/assistant', [AssistantController::class, 'send'])->middleware('throttle:6,1')->block(55, 5)->name('portal.assistant.send');
+    Route::delete('/portal/assistant', [AssistantController::class, 'clear'])->block(55, 5)->name('portal.assistant.clear');
     Route::get('/dashboard', [Portal::class, 'dashboard'])->name('dashboard');
     Route::get('/portal/profile', [Portal::class, 'profile'])->name('portal.profile');
     Route::put('/portal/profile', [Portal::class, 'updateProfile'])->name('portal.profile.update');

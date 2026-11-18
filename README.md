@@ -1,5 +1,7 @@
 # WCC JobMatch — Laravel portal
 
+**New: JobMatch Assistant.** Career guidance and app help through **AI Assistant** in the portal. See [setup and behavior](documentation/AI_ASSISTANT.md). Windows users can run `START-ASSISTANT.cmd` inside their configured project; chat reuses the Gemini credentials and needs no trained ML.NET model.
+
 Laravel 12 application for World Citi College career records and employer opportunities. The frontend uses Blade, Livewire, Tailwind and the existing WCC branding. This repository runs independently of the C# / Blazor Solo application.
 
 ## Requirements

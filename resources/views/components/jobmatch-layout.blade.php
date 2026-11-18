@@ -16,6 +16,9 @@
         <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
         <link rel="stylesheet" href="{{ asset('css/jobmatch-current.css') }}">
         <link rel="stylesheet" href="{{ asset('css/jobmatch-stitch.css') }}?v=13">
+        @auth
+            <link rel="stylesheet" href="{{ asset('css/jobmatch-assistant.css') }}?v=1">
+        @endauth
     </head>
     <body id="page-top" class="{{ $portal ? 'portal-page' : 'public-page' }} stitch-ui">
         <a class="skip-link" href="#main-content">Skip to content</a>
@@ -26,6 +29,11 @@
         </main>
         @include('jobmatch.layout.footer')
         @include('jobmatch.layout.install-dialog')
+        @auth
+            @unless(request()->routeIs('portal.assistant*'))
+                <a class="assistant-launcher" href="{{ route('portal.assistant') }}" aria-label="Open JobMatch AI Assistant">✦ <span>Ask JobMatch</span></a>
+            @endunless
+        @endauth
         <script data-jobmatch-offline="{{ asset('jobmatch-sw.js') }}?v=offline-21" src="{{ asset('js/jobmatch-current.js') }}?v=20" defer></script>
     </body>
 </html>

@@ -2,7 +2,7 @@ name: Laravel checks
 
 on:
   push:
-    branches: [feature/frontend, fix/laravel-readiness, feature/local-semantic-matching, feature/cole-aligned-ai]
+    branches: [feature/frontend, fix/laravel-readiness, feature/local-semantic-matching, feature/cole-aligned-ai, feature/jobmatch-assistant]
   pull_request:
     branches: [feature/frontend, main]
   workflow_dispatch:
